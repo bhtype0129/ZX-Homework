@@ -18,19 +18,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        /**
-         Menu menu = new Menu();
-         menu.menuShow();
-         */
-        /**
-         //在类路径中寻找applicationContext.xml配置文件作为参数传入
-         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-         SpringTest springTest = new SpringTest();
-         SpringTest springTest1 = (SpringTest) context.getBean("SpringTest");
-         springTest1.show();
-         BookDO book = new BookDO();
-         log.info("class1={} class2={}", book, book);//打日志的模板写法
-         */
+//
+//         Menu menu = new Menu();
+//         menu.menuShow();
+//
+//
+//         //在类路径中寻找applicationContext.xml配置文件作为参数传入
+//         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+//         SpringTest springTest = new SpringTest();
+//         SpringTest springTest1 = (SpringTest) context.getBean("SpringTest");
+//         springTest1.show();
+//         BookDO book = new BookDO();
+//         log.info("class1={} class2={}", book, book);//打日志的模板写法
+
 
         //applicationContext是一个接口，相当于spring的入口，建立context这个对象引用，通过
         // “classpath这个实现类具有构造方法”里读取applicationContext.xml配置文件，完成相应的初始化，如对
@@ -49,6 +49,7 @@ public class Main {
          BookCondition bookCondition = new BookCondition();
          bookCondition.createCriteria().andIdEqualTo(4L);
          */
+
 
     }
 

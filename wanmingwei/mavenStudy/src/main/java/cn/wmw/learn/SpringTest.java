@@ -11,7 +11,7 @@ import java.util.List;
 //Component注解，作用是创建实例放到容器里面，注解类,默认这个实例的名字是springTest
 @Component
 public class SpringTest {
-//    Resource注解，注解类中的属性  所以要在BookMapper前加注解Component
+//    Resource注解，注解类中的属性  所以要在BookMapper前加注解Resource
     @Resource
     BookMapper bookMapper;
     public void insert(BookDO bookDO) {

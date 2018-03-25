@@ -146,9 +146,23 @@ public class BookCondition {
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
-        //and的优先级高于or，所有and的为一个整体，被or给分开。
+        //BookCondintion为数据库查询where条件的集合体比如where 条件1 and 条件2 or条件3
+        //那么(条件1 and 条件2整体作为一个Criteria对象出现)，or后面的条件3作为另外一个Criteria对象
+        //BookCondition对象具有一个List<Criteria>属性，生成的Criteria对象都被放入这个属性中和BookCondition捆绑。
+        //Criteria对象具有一个List<Criterion>属性，通过调用Criteria对象的方法，
+        // 如我们调用andNameEqualTo(String name)方法，则这个方法会生成一个Criterion对象，他具有两个属性(此处只用到
+        // 两个，其实不止两个)，第一个属性 Condition="name" 第二个属性 value="具体名字(如cooper)"，
+        //然后将这个Criterion对象装入Criteria对象的list<Criterion>中，那么相当于从BookCondition对象
+        //中寻找List<Criteria>属性得到Criteria对象，然后又通过Criteria对象的List<Criterion>属性获取Criterion对象，
+        //最后，从bCriterion对象获取他的属性 把两个属性（Condition和Value）值拼接起来即是 name="cooper"，即得到了
+        //数据库操作中的where后面的条件语句，从而对数据库进行操作。
+        //那么BookMapper中定义的方法是对数据库进行操作，如查询。Book Condition作为参数传入方法那么整体达到的效果
+        //就实现了一个正常的sql语句实现了操作，如select * from students where sex="女" select是bookMapper中的方法，
+        // where后面的语句由 BookConition对象代替。
+
         if (oredCriteria.size() == 0) {
             oredCriteria.add(criteria);
+            //and的优先级高于or，所有and的为一个整体，被or给分开
         }
         return criteria;
     }
@@ -186,6 +200,8 @@ public class BookCondition {
         protected List<Criterion> criteria;
 
         protected GeneratedCriteria() {
+            //此处GeneratedCriteria是BookCondintion的内部类，但是外部类并不是内部类的父类
+            //其父类应该存在与框架代码中(对我们透明)，明白此处不是调用外部类构造方法即可
             super();
             criteria = new ArrayList<Criterion>();
         }

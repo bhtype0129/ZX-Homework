@@ -34,4 +34,9 @@ public class BookDO {
      * 
      */
     private String introduction;
+
+    /**
+     * 
+     */
+    private Integer mac;
 }

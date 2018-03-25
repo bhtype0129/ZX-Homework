@@ -17,8 +17,9 @@ import java.util.Scanner;
 /**
  * --Create by xzt-- on 18-1-24
  */
-@Slf4j
-public class Main {
+
+/*
+@Slf4jpublic class Main {
     public static void main(String[] args) {
         //ApplicationContext context1 = new FileSystemXmlApplicationContext();
         ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
@@ -26,6 +27,35 @@ public class Main {
         Scanner input = new Scanner(System.in);
         BookCondition bookCondition = new BookCondition();
         bookCondition.createCriteria();
+        bookLibrary.selectByPrimaryKey(10001);
+    }
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /*while (true) {
@@ -75,5 +105,3 @@ public class Main {
         }
 
     }*/
-    }
-}

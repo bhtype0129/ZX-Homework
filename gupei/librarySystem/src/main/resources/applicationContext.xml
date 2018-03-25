@@ -6,14 +6,28 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 数据源 org.apache.commons.dbcp.BasicDataSource com.alibaba.druid.pool.DruidDataSource -->
+    <!--applicationalContext.xml是建立连接池和数据库的连接，而mybatisGeneratorConfig.xml
+        是让mybatis这个框架和数据库建立连接从而在运行第一次的时候生成操作数据库的方法，之后mybatis操作指令(一个个线程)。
+        完成以后通过连接池送过去。第一次mybatis与数据库建立连接(需要密码)这里目的是生成操作数据库的方法，之后访问请求和操作请求
+        都通过连接池连接，所以需要总共2次输入数据库用户和密码，可以理解为之后产生访问请求生成线程通过连接池连接，而第一次mybatis需要
+        密码在于初始化连接生成具体的方法-->
+
+    <!--可以认为mybatis的作用就是生成了能操作数据库的方法及相应的条件(代码第一次运行的时候)-->
+
+    <!--连接池的作用：连接池是将已经创建好的连接保存在池中，当有请求（mybatis的指令）来时，直接使用已经创建好的连接对数据库进行访问。
+    这样省略了创建连接和销毁连接的过程。这样性能上得到了提高。-->
+    <!-- 数据库连接池，配置与数据库的连接 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost/library?characterEncoding=utf8&amp;useInformationSchema=true"/>
+        <!-- 与数据链接需要URL，格式为jdbc:mysql：//服务器地址/数据库名？参数列表 -->
+        <property name="url" value="jdbc:mysql://localhost/library?characterEncoding=utf8&amp;
+        useInformationSchema=true"/>
+
         <property name="username" value="root" />
         <property name="password" value="081394" />
 
-
-        <!-- druid 连接池的 -->
+        <!-- druid 连接池的配置-->
+        <!--连接池(一种方法)的作用是保证同时一定数量的访问，不让服务器崩溃也不让用户时延太大-->
         <property name="filters" value="stat" />
 
         <!-- 下面druid 和 dbcp 连接池通用的 ↓↓↓↓↓↓↓↓↓↓↓↓ -->
@@ -23,23 +37,35 @@
         <property name="initialSize" value="5" />
 
     </bean>
-
+    <!--创建数据库会话工厂,-->
+    <!-- 配置扫描Domain的包路径，位于cn.cooper.uestc.domain包下，domain包下还含有对数据库表进行操作的条件(BookCondition文件)
+        看到bean应该清楚此为无方法只有属性的对象的标志，所以此处是书这个对象和数据库建立连接按照mybatis的配置连接-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <!-- 配置扫描Domain的包路径 //位于cooper包下-->
-        <property name="typeAliasesPackage" value="cn.cooper.uestc.domain"/>
-        <!-- 配置mybatis配置文件的位置 ，位于resource的mapper包下-->
-        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 配置mybatis配置文件的位置 ，mybatis-config.xml，通过扫描域的类和mybatis配置文件，建立对象(此处为书)
+       和数据库的对话，即书这个对象是将要被放入数据库中的表的，之所以这样说的原因是下面这个文件，mybatis-config.xml
+       指明了对象的属性名和数据库表的列名进行映射-->
         <!-- 配置扫描Mapper包下 XML的位置 -->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="cn.cooper.uestc.domain"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+
         <!--<property name="mapperLocations"-->
         <!--value="classpath*:/mapper/**/*.xml"/>-->
         <property name="mapperLocations"
                   value="classpath:mapper/**/*.xml"/>
 
     </bean>
-    <!-- 扫描对应的Java Mapper包 -->
+    <!--  Mapper包下的类或者接口和数据库建立会话，因为具有bean可知，无方法只有属性。含有具体方法的xml文件及其生成位置在
+    mybatisGeneratorConfig.xml文件里面设置。由于生成的mapper为接口，所以可看做只有属性无方法的对象和数据库建立连接 -->
+    <!-- 指定存放java mapper接口的的包路径，mapper就是一个映射器，只定义了方法但没有实现，方法体在另外一个xml文件里面，
+       运行时候动态生成实现类(将BookMapper.xml文件里面的方法搬到实现类中)，从而通过BookerMapper的引用(此处为BookMapper类型的引用，因为BookMapper是接口)
+       调用里面定义的方法，对数据库中的表进行操作 -->
+
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定存放java mapper接口的的包路径，BookMapper与数据库建立映射（以与数据库建立会话的方式，即建立起了连接）
+   BookMapper对象调用方法的便是对数据库中的表进行操作-->
         <property name="basePackage" value="cn.cooper.uestc.mapper"/>
+        <!-- 指定连接会话工厂 -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
@@ -52,11 +78,11 @@
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" />
         </mvc:message-converters>
     </mvc:annotation-driven>
-
+    <!--配置改转换器之后，需要传送JSON作为参数，不能使用表格格式-->
     <!--开启spring的注解-->
     <context:annotation-config/>
         <!--指定spring扫描的包，这些包下面的类会创建实例，-->
-        <!--放入spring的仓库中，以便从spring直接获取-->
+        <!--然后放入spring的仓库中，以便直接获取-->
     <context:component-scan base-package="cn.cooper.uestc"/>
 
 </beans>

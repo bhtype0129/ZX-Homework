@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 //Data注解帮助对属性进行set,get方法，并且也重写好了toString()方法。
 public class GetAllBookReq {
-    int pageSize;
-    int maxPageCount;
+    Long id;
+    String name;
+    String author;
+    String intro;
+    String catalogue;
+
 }

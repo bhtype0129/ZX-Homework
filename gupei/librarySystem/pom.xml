@@ -31,12 +31,14 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
+        <!--打印日志的框架-->
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>2.10.0</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
     <dependency>
+        <!--连接,整合log4j 和slf4j框架-->
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
         <version>2.10.0</version>
@@ -48,7 +50,7 @@
         <artifactId>mybatis</artifactId>
         <version>3.4.5</version>
     </dependency>
-    <!--//连接spring框架和数据库的框架-->
+    <!--//连接整合spring和mybatics框架-->
     <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
     <dependency>
         <groupId>org.mybatis</groupId>
@@ -57,7 +59,7 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
-        <!--//jdbc,java连接数据库的框架-->
+        <!--jdbc,java连接数据库的驱动框架-->
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>6.0.6</version>
@@ -69,6 +71,7 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
     <dependency>
+        <!--建立连接池，连接池(一种方法)的作用是保证同时一定数量的访问，不让服务器崩溃也不让用户时延太大-->
         <groupId>com.alibaba</groupId>
         <artifactId>druid</artifactId>
         <version>1.1.6</version>
@@ -93,16 +96,31 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
     <dependency>
+        <!--引入json格式框架，使得对象在网页上以json格式展现，类似于java中的toString方法-->
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>1.2.7</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina -->
+    <dependency>
+        <!--tomcat包的引入，tomcat做的事情就是把http报文转为java代码相关的类(httpservlet)供我们操作，
+        这样建立客户端和服务端的网络连-->
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-catalina</artifactId>
+        <version>9.0.5</version>
+    </dependency>
+
+
+
+
 
 
 
 </dependencies>
     <build>
         <plugins>
+            <!--添加一些更多功能的插件-->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -114,7 +132,7 @@
                     <overwrite>true</overwrite>
                 </configuration>
                 <dependencies>
-
+                    <!--基于官方框架做了一定的功能扩充-->
                     <dependency>
                         <groupId>commons-lang</groupId>
                         <artifactId>commons-lang</artifactId>

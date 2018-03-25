@@ -6,7 +6,7 @@ public class Test1 {
     //此class用于测试java核心技术阅读中出现的问题
     StringBuilder stringBuilder = new StringBuilder("CCCCCCCCCCCCCC");
 
-    public final String hh() {
-        return "成都";
+    public static void main(String[] args) {
+        System.out.println("傻孩子");
     }
 }
