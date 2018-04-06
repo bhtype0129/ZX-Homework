@@ -1,0 +1,42 @@
+java各版本特性
+1.5和1.8版本
+API
+通过命令行完成操作
+与win文件分隔符不同
+apt ---sudo apt install 应用
+red hat，最大技术支持
+
+Ubuntu
+内核（与硬件相关）  由额外组织维护
+内核+API+UI=系统
+
+apt（包管理工具的一种）
+apt-add-ppa加入第三方仓库
+apt upgrad 批量更新
+
+都要加sudo，以管理员运行
+remove仅删除源码
+auto-remove删除文件以及所有依赖，不常用，会使其他程序也无法使用，第三方依赖一般通用
+purge也会删除配置文件 apt purge 文件
+
+.exe文件，是一个打包的文件 win下需要注册，注册表
+
+rm-rf/删除全部linux文件，包括系统，会导致系统崩溃
+rm-rf./删除后面地址的全部文件
+
+绿色软件--不经过安装，解压运行即可
+
+bin目录下，代表可运行的程序文件（或sbin）
+ls查看当前目录下文件
+./代表当前目录    ./才能运行当前目录下的文件
+
+
+环境 变量
+PATH
+echo显示
+PATH=/bin/sbin
+PATH=$PATH:/bin
+
+安装过程：1.下载
+		2.解压
+		3.添加环境变量PATH=目录（bash  rc启动时运行）
