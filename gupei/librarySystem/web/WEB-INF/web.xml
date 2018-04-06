@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <!--监听用户的请求，用户请求先发送到tomcat，tomcat把请求(tomcat把报文请求
+    变为实际的类的对象)发送给java(这种方式是以tomcat把对象映射给监听器servlet或者listener实现的),
+    servlet相当于listener监听器差不多-->
+    <servlet>
+        <!--整个网络web程序的入口,创建一个为处理用户请求的程序，Dispatcher是收发调度的意思，
+        下面这个name是我们自己创建的名字-->
+        <servlet-name>DispatcherServlet1</servlet-name>
+        <!--创建一个实例,DispatcherSelvlert是系统框架中已经存在的一个class，创建它的实例并与我们自己定义
+        的这个servletname关联起来-->
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--创建实例的过程中，给构造方法的参数传参-->
+        <init-param>
+            <!--参数的名称-->
+            <param-name>contextConfigLocation</param-name>
+            <!--参数的值是spring框架的配置文件(applicationContext.xml)的路径,构造实例的过程通过
+            传实参达到了启动spring框架的目的-->
+            <param-value>classpath*:applicationContext.xml</param-value>
+            <!--指定路径赋值给contextConfigLocation，spring-mvc拿applicationContext(应用上下文).xml的配置内容
+            去启动spring -->
+        </init-param>
+        <!--设置1表示此服务程序是交给他第一个处理,load-on-startup表示启动时加载顺序-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!--tomact在加载时候扫描web.xml文件然后创建监听器对象，监听器对象调用accept()方法一直处于监听状态，一直在监听用户端
+    是否传递来对象，当用户端的请求来的时候先被tomcat变为对象然后被监听器监听到，继而调用servlet-mapping，通过servletMapping
+    里面设置的名字去运行servlet.然后servlet里面又设置了该以什么配置去运行这个servlet.这里servlet设置了以
+    (applicationContext.xml)这个应用程序配置文件去运行，由于applicationContext.xml里面写明了建立和数据库的连接，用spring框架去
+    扫描uestc.cooper包生成实例放进仓库等操作，于是servlet按照这个要求通过DispatcherServlet对象去调用方法达到
+    运行整个框架代码的目的(即开始调用main方法，此处对我们透明)，于是整个框架代码(即应用程序，应用程序可以看做是我们写的类，接口的代码总称
+    )开始运行起来。(如建立好连接，建立好带有@Resoure注解对象放进仓库等，这些都是在最开始的时候做好)
+    最后通过判定用户request的url地址，servlet下DispatcherServlet对象会去找到带有RestController注解的类的对象
+    然后调用这个类里所定义的地址对应相关的方法(高级特性部分)-->
+    <!--总结下来就是应用程序是跑在web服务器上面的-->
+    <!--mapping表示映射，映射和监听是一个整体，一个映射对应一个servlet-->
+    <servlet-mapping>
+        <!--通过确定servelet名称的方式建立映射，即DispatcherServlet1-->
+        <servlet-name>DispatcherServlet1</servlet-name>
+        <!--，所有的请求到达后台会去掉前面的url主页网址，而剩下/开头的根目录如/book/java。星号代表所有，
+        则/*表示请求都交给DispatcherServlet1，此处的url-pattern是指除开前面的url主页网址还剩下的名称-->
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <!--指定路径赋值给contextConfigLocation，spring-mvc拿applicationContext去启动spring-->
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>

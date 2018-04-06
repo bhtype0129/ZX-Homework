@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE generatorConfiguration
+                PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+                "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!--此为mybatis框架配置数据库的配置文件，达到的目的是具体实现文件的生成-->
+    <!--mysql 连接数据库jar 这里选择自己本地位置-->
+    <classPathEntry location="/home/sunday/qq-dowolonds/mysql-connector-java-5.1.40.jar"/>
+    <context id="testTables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$"/>
+            <property name="replaceString" value="Condition"/>
+        </plugin>
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="DOCondition"/>
+            <property name="replaceString" value="Condition"/>
+        </plugin>
+
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <!--applicationalContext.xml是建立连接池和数据库的连接，而mybatisGeneratorConfig.xml(也就是本文件
+        )是让mybatis这个框架和数据库建立连接从而生成操作数据库的方法，之后mybatis操作指令(一个个线程)
+        完成以后通过连接池送过去。第一次mybatis与数据库建立连接(需要密码)这里目的是生成操作数据库的方法，之后访问请求和操作
+        请求都通过连接池连，所以需要总共2次输入数据库用户和密码-->
+
+        <!--可以认为mybatis的作用就是生成了能操作数据库的方法及相应的条件(代码第一次运行的时候)-->
+
+        <!--连接池的作用：连接池是将已经创建好的连接保存在池中，当有请求（mybatis的指令）来时，直接使用已经创建好的连接对数据库进行访问。
+        这样省略了创建连接和销毁连接的过程。这样性能上得到了提高。-->
+        <!--Java DataBase Connectivity（jdbc）java数据库连接-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/library?characterEncoding=utf8&amp;useInformationSchema=true"
+                        userId="root"
+                        password="081394">
+            <property name="useInformationSchema" value="true"></property>
+        </jdbcConnection>
+        <!-- 默认false，把JDBC decimal(十进制) 和 numeric 类型解析为 Integer，为 true时把JDBC DECIMAL 和
+           NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!--&lt;!&ndash; targetProject:生成PO类的位置 &ndash;&gt;-->
+        <!--java模型生成，生成对数据库表进行操作的条件的class模型(即BookCondintion)，如查询条件，删除条件等
+        其实条件就是bookmapper操作数据表的方法的参数-->
+        <javaModelGenerator targetPackage="cn.cooper.uestc.domain"
+                            targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!-- targetProject:Boookmapper这个映射文件生成的位置
+           如果maven工程只是单独的一个工程，targetProject="src/main/java"
+           若果maven工程是分模块的工程，targetProject="所属模块的名称"，例如：
+           targetProject="ecps-manager-mapper"，下同-->
+
+        <!--sqlMapGenerator表示去哪个地方生成放SQL语句的文件(具有方法实体)，运行代码的时候动态生成具有这些方法(方法搬过去)的类
+        通过BookMapper接口的引用来调用方法然后操作数据库。此处为resources下生成的BookMapper.xml文件-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!-- targetPackage：具体生成mapper接口这个文件,下面拟定了mapper接口生成的位置，即生成的BookMapper接口
+         -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="cn.cooper.uestc.mapper"
+                             targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+        <!-- 建立数据库表，建立表以后在domainObjectName输入一个类的名字，mybatisGeneator会按照我们设置的表的属性自动生成一个
+        类。如对应book表以后自动生成一个名为BookDo的类，这个类的属性和booK表的属性一样，表面BOOKDO对象是放入book表中的，BookDO
+        类自动生成-->
+        <table schema="" tableName="book" domainObjectName="BookDo">
+            <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
+
+        </table>
+    </context>
+</generatorConfiguration>
+
